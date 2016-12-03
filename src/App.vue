@@ -4,9 +4,6 @@
     <template v-if="$route.matched.length">
       <router-view></router-view>
     </template>
-    <template v-else>
-      <p>You are logged {{ loggedIn ? 'in' : 'out' }}</p>
-    </template>
   </div>
 </template>
 
@@ -21,6 +18,4 @@ export default {
 };
 </script>
 
-<style lang="sass">
-  @import "assets/stylesheets/main"
-</style>
+<style src="assets/stylesheets/main.scss" lang="scss"></style>

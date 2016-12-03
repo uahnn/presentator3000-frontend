@@ -5,6 +5,9 @@ import auth from './auth';
 import Login from './components/Login';
 import Hello from './components/Hello';
 import Viewer from './components/Viewer';
+import Register from './components/Register';
+import Features from './components/Features';
+import Pricing from './components/Pricing';
 import Dashboard from './components/Dashboard';
 
 Vue.use(VueRouter);
@@ -27,6 +30,9 @@ const router = new VueRouter({
   routes: [
     { path: '/', name: 'hello', component: Hello },
     { path: '/dashboard', name: 'dashboard', component: Dashboard, beforeEnter: requireAuth },
+    { path: '/register', name: 'register', component: Register },
+    { path: '/pricing', name: 'pricing', component: Pricing },
+    { path: '/features', name: 'features', component: Features },
     { path: '/view', name: 'viewer', component: Viewer },
     { path: '/login', component: Login },
     { path: '/logout',

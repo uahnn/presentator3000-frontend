@@ -85,10 +85,21 @@ module.exports = {
   },
   vue: {
     loaders: utils.cssLoaders({ sourceMap: useCssSourceMap }),
-    postcss: [
-      require('autoprefixer')({
-        browsers: ['last 2 versions']
-      })
-    ]
+    postcss: {
+      plugins: [
+        /*require('autoprefixer')({
+         browsers: ['last 2 versions']
+         }),*/
+        require('postcss-cssnext')(),
+        require('lost')(),
+        require('postcss-import')(),
+        require('cssnano')(),
+        require('postcss-color-function'),
+        //require('postcss-scss')(),
+      ],
+      options: {
+        //parser: require('postcss-scss')(),
+      }
+    }
   }
 }

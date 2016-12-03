@@ -6,15 +6,21 @@
           <li>
             <router-link to="/">Home</router-link>
           </li>
-          <li>
-            <router-link to="/about">About</router-link>
+          <li v-if="!loggedIn">
+            <router-link to="/features">Features</router-link>
           </li>
-          <li>
+          <li v-if="!loggedIn">
+            <router-link to="/pricing">Pricing</router-link>
+          </li>
+          <li v-if="loggedIn">
             <router-link to="/dashboard">Dashboard</router-link>
+          </li>
+          <li v-if="!loggedIn">
+            <router-link to="/register">Register</router-link>
           </li>
           <li>
             <router-link v-if="loggedIn" to="/logout">Log out</router-link>
-            <router-link v-if="!loggedIn" to="/login">Log in</router-link>
+            <router-link v-if="!loggedIn" to="/login">Sign in</router-link>
           </li>
         </ul>
       </div>

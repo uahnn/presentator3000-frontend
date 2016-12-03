@@ -1,7 +1,6 @@
 @import "styles.scss";
 
 .wrapper {
-
   @media (--breakpoint-20) {
     display: flex;
     position: absolute;
@@ -12,8 +11,16 @@
   }
 }
 
-.sg-main {
+.aside {
+  background: var(--color-neutral-10);
 
+  @media (--breakpoint-20) {
+    overflow-y: auto;
+    flex: 0 0 16rem;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+.main {
   @media (--breakpoint-20) {
     overflow-y: auto;
     flex: auto;
@@ -21,7 +28,7 @@
   }
 }
 
-nav {
+nav, .subnav {
   list-style: none;
   margin-bottom: var(--spacing);
   background: var(--color-neutral-10);
@@ -32,7 +39,6 @@ nav {
     -webkit-overflow-scrolling: touch;
   }
 
-  & li { display: inline-block; }
   & li:last-child a { border: 0; }
 
   & a {
@@ -47,7 +53,5 @@ nav {
   }
 }
 
-#admin {
-  height: 20px;
-  border: 1px solid #000;
-}
+nav li { display: inline-block; }
+
