@@ -1,5 +1,5 @@
 <template>
-  <div id="admin">
+  <div id="dashboard">
     {{msg}}
   </div>
 </template>
@@ -8,7 +8,7 @@
   export default {
     data() {
       return {
-        msg: 'Admin',
+        msg: 'This is your dashboard.',
       };
     },
   };

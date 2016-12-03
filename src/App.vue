@@ -1,36 +1,26 @@
 <template>
-  <div id="presentator">
-
-    <hello></hello>
-    <admin></admin>
-    <viewer></viewer>
-
+  <div class="wrapper">
+    <heading></heading>
+    <template v-if="$route.matched.length">
+      <router-view></router-view>
+    </template>
+    <template v-else>
+      <p>You are logged {{ loggedIn ? 'in' : 'out' }}</p>
+    </template>
   </div>
 </template>
 
 <script>
-import Hello from './components/Hello';
-import Admin from './components/Admin';
-import Viewer from './components/Viewer';
+import Heading from './components/Heading';
 
 export default {
   name: 'presentator',
   components: {
-    Hello, Admin, Viewer,
+    Heading,
   },
 };
 </script>
 
-<style>
-#presentator {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
 <style lang="sass">
-  @import "./assets/scss/main"
+  @import "assets/stylesheets/main"
 </style>

@@ -1,0 +1,53 @@
+@import "styles.scss";
+
+.wrapper {
+
+  @media (--breakpoint-20) {
+    display: flex;
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+  }
+}
+
+.sg-main {
+
+  @media (--breakpoint-20) {
+    overflow-y: auto;
+    flex: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+nav {
+  list-style: none;
+  margin-bottom: var(--spacing);
+  background: var(--color-neutral-10);
+
+  @media (--breakpoint-20) {
+    overflow-y: auto;
+    flex: 0 0 16rem;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  & li { display: inline-block; }
+  & li:last-child a { border: 0; }
+
+  & a {
+    display: block;
+    padding: 0.5rem 0;
+    color: var(--color-neutral-50);
+    font-size: var(--font-size-40);
+
+    &:hover {
+      color: var(--color-neutral-90);
+    }
+  }
+}
+
+#admin {
+  height: 20px;
+  border: 1px solid #000;
+}
