@@ -4,7 +4,7 @@
       <div class="container">
         <ul class="nav navbar-nav">
           <li>
-            <router-link to="/">Home</router-link>
+            <router-link to="/" exact>Home</router-link>
           </li>
           <li v-if="!loggedIn">
             <router-link to="/features">Features</router-link>
@@ -12,11 +12,17 @@
           <li v-if="!loggedIn">
             <router-link to="/pricing">Pricing</router-link>
           </li>
+          <li v-if="!loggedIn">
+            <router-link to="/register">Register</router-link>
+          </li>
           <li v-if="loggedIn">
             <router-link to="/dashboard">Dashboard</router-link>
           </li>
-          <li v-if="!loggedIn">
-            <router-link to="/register">Register</router-link>
+          <li v-if="loggedIn">
+            <router-link to="/presentations">Presentations</router-link>
+          </li>
+          <li v-if="loggedIn">
+            <router-link to="/profile">Profile</router-link>
           </li>
           <li>
             <router-link v-if="loggedIn" to="/logout">Log out</router-link>

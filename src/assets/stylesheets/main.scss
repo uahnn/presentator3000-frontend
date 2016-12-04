@@ -1,13 +1,8 @@
 @import "styles.scss";
 
-.wrapper {
+#dashboard {
   @media (--breakpoint-20) {
     display: flex;
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
   }
 }
 
@@ -31,14 +26,10 @@
 nav, .subnav {
   list-style: none;
   margin-bottom: var(--spacing);
+  padding: 0 2% 0 2%;
   background: var(--color-neutral-10);
 
-  @media (--breakpoint-20) {
-    overflow-y: auto;
-    flex: 0 0 16rem;
-    -webkit-overflow-scrolling: touch;
-  }
-
+  & li { padding: 0 2% 0 2%; }
   & li:last-child a { border: 0; }
 
   & a {
@@ -51,7 +42,32 @@ nav, .subnav {
       color: var(--color-neutral-90);
     }
   }
+  & a.active {
+    font-weight: bold;
+  }
 }
 
 nav li { display: inline-block; }
 
+#presentations {
+  & .list li {
+    display: flex;
+    padding: 1rem 0 1rem 0;
+    border-bottom: 2px solid #ccc;
+    & .preview {
+      width: 20%;
+      height: 100px;
+    }
+    & .info {
+      & .title {
+        font-size: var(--font-size-40);
+      }
+      & .action {
+
+      }
+      & .meta {
+
+      }
+    }
+  }
+}
