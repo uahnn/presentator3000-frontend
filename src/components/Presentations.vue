@@ -6,14 +6,17 @@
         {{ msg }}
         <div class="actionbar">
           <div class="l-3">
-            <a class="c-button c-button--small c-button--success" href="">
+            <a class="c-button c-button--small c-button--success" href="/presentation/add">
               <icon name="plus-circle"></icon> New presentation
             </a>
             <a class="c-button c-button--small c-button--alert" href="">
               <icon name="trash"></icon> Delete
             </a>
           </div>
-          <div class="l-9"><input type="text" placeholder="search presentations" /></div>
+          <div class="l-9">
+            <input type="text" v-model="searchterm" placeholder="search presentations" />
+            <icon name="search"></icon>
+          </div>
         </div>
       </div>
       <div class="l-container">
@@ -28,10 +31,10 @@
                 Created: {{ presentation.date_created }}
               </div>
               <div class="action">
-                <a class="c-button c-button--small c-button--neutral" href="">
+                <a class="c-button c-button--small c-button--neutral" :href="'/presentation/edit/' + filters.slugify(presentation.title) + '/' + presentation.pid">
                   <icon name="pencil"></icon> Edit
                 </a>
-                <a class="c-button c-button--small c-button--neutral" href="">
+                <a class="c-button c-button--small c-button--neutral" :href="'/presentation/view/' + filters.slugify(presentation.title) + '/' + presentation.pid">
                   <icon name="eye"></icon> Present
                 </a>
                 <a class="c-button c-button--small c-button--neutral" href="">
@@ -58,22 +61,42 @@
         msg: 'text',
         presentations: [
           {
-            title: 'presentation 1',
+            pid: 1,
+            title: 'Vue.js and Laravel',
             number_of_slides: 30,
             date_created: '01.10.2016',
           },
           {
-            title: 'presentation 2',
+            pid: 2,
+            title: 'Angular 2 framework',
             number_of_slides: 30,
             date_created: '01.10.2016',
           },
           {
-            title: 'presentation 3',
+            pid: 3,
+            title: 'Vue.js framework',
             number_of_slides: 30,
             date_created: '01.10.2016',
           },
         ],
       };
+    },
+    methods: {
+      // searchterm returns a filtered list of the input
+      searchterm: function (input) {
+        let searchterm = input.srcElement.value;
+        let searchfields = ['title'];
+        let returnList = [];
+        if (searchterm === '') return this.presentations;
+        this.presentations.forEach(function (presentation) {
+          searchfields.forEach(function (field) {
+            if (presentation[field].includes(searchterm)) {
+              returnList.push(presentation);
+            }
+          });
+        });
+        return returnList;
+      },
     },
     components: { Icon },
   };

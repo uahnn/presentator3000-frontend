@@ -57,6 +57,8 @@ nav li { display: inline-block; }
     & .preview {
       width: 20%;
       height: 100px;
+      border: 1px solid #ccc;
+      margin-right: 10px;
     }
     & .info {
       & .title {
