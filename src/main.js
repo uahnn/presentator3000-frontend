@@ -62,8 +62,8 @@ const router = new VueRouter({
     { path: '/pricing', name: 'pricing', component: Pricing },
     { path: '/features', name: 'features', component: Features },
     { path: '/presentations', name: 'presentations', component: Presentations },
-    { path: '/presentation/:mode/:title/:pid', name: 'presentation', component: Presentation },
-    { path: '/view', name: 'viewer', component: Viewer },
+    { path: '/presentation/edit/:title/:pid', name: 'presentation', component: Presentation },
+    { path: '/presentation/view/:title/:pid', name: 'presentation', component: Viewer },
     { path: '/login', component: Login },
     { path: '/logout',
       beforeEnter(to, from, next) {

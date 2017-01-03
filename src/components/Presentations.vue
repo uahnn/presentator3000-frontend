@@ -21,7 +21,7 @@
       </div>
       <div class="l-container">
         <ul class="list">
-          <li v-for="presentation in presentations">
+          <li v-for="presentation in filtered_presentations">
             <div class="preview"></div>
             <div class="info">
               <div class="title">{{ presentation.title }}</div>
@@ -59,6 +59,7 @@
     data() {
       return {
         msg: 'text',
+        searchterm: '',
         presentations: [
           {
             pid: 1,
@@ -81,21 +82,20 @@
         ],
       };
     },
-    methods: {
-      // searchterm returns a filtered list of the input
-      searchterm: function (input) {
-        let searchterm = input.srcElement.value;
-        let searchfields = ['title'];
-        let returnList = [];
-        if (searchterm === '') return this.presentations;
-        this.presentations.forEach(function (presentation) {
+    computed: {
+      filtered_presentations: function () {
+        let that = this;
+        return this.presentations.filter(function (presentation) {
+          let searchfields = ['title'];
+          let show = true;
+          if (that.searchterm === '') return true;
           searchfields.forEach(function (field) {
-            if (presentation[field].includes(searchterm)) {
-              returnList.push(presentation);
+            if (!presentation[field].toLowerCase().includes(that.searchterm.toLowerCase())) {
+              show = false;
             }
           });
+          return show;
         });
-        return returnList;
       },
     },
     components: { Icon },

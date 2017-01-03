@@ -32,6 +32,6 @@ module.exports = {
     'func-names' : 'off',
     'object-shorthand' : 'off',
     'prefer-const' : 'off',
-
+    'consistent-return' : 'off',
   },
 }

@@ -2,15 +2,17 @@
   <div id="presentation">
     <main class="main">
       <div class="l-container">
-        <h1>Presentation <span class="mode">Edit</span></h1>
-        {{ msg }}
+        <h1>{{ presentation.title }} <span class="mode">
+          <span class="c-button c-button--small c-button--disabled">Edit</span>
+          <a class="c-button c-button--small c-button--neutral" :href="'/presentation/view/' + filters.slugify(presentation.title) + '/' + presentation.pid">View</a>
+        </span></h1>
         <div class="actionbar">
           <div class="l-3">
             <a class="c-button c-button--small c-button--neutral" href="">
               <icon name="plus-circle"></icon> Add slide
             </a>
             <ul class="list">
-              <li v-for="slide in presentation">
+              <li v-for="slide in slides">
                 <div class="preview"></div>
                 <icon name="star"></icon>
                 <icon name="trash"></icon>
@@ -37,22 +39,24 @@
   export default {
     data() {
       return {
-        msg: 'text',
-        presentation: [
+        presentation: {
+          pid: 1,
+          title: 'Vue.js and Laravel',
+          number_of_slides: 30,
+          date_created: '01.10.2016',
+        },
+        slides: [
           {
-            title: 'slide 1',
-            number_of_slides: 30,
-            date_created: '01.10.2016',
+            sid: 1,
+            content: '# Title\n\n### Subtitle Longlonglonglongcat',
           },
           {
-            title: 'slide 2',
-            number_of_slides: 30,
-            date_created: '01.10.2016',
+            sid: 2,
+            content: '## Normal title\n\n- List item 1\n- List item 2\n- etc. etc. etc.',
           },
           {
-            title: 'slide 3',
-            number_of_slides: 30,
-            date_created: '01.10.2016',
+            sid: 3,
+            content: '',
           },
         ],
       };

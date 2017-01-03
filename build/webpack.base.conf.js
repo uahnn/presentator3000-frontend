@@ -72,7 +72,7 @@ module.exports = {
       },
       {
         test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
-        loader: 'url',
+        loader: 'file',
         query: {
           limit: 10000,
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
@@ -87,9 +87,6 @@ module.exports = {
     loaders: utils.cssLoaders({ sourceMap: useCssSourceMap }),
     postcss: {
       plugins: [
-        /*require('autoprefixer')({
-         browsers: ['last 2 versions']
-         }),*/
         require('postcss-cssnext')(),
         require('lost')(),
         require('postcss-import')(),
