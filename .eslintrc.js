@@ -33,5 +33,11 @@ module.exports = {
     'object-shorthand' : 'off',
     'prefer-const' : 'off',
     'consistent-return' : 'off',
+    'import-first': 'off',
+    'import-extensions': 'off',
+    'max-len': 'off',
+  },
+  'env': {
+    'browser': true,
   },
 }
