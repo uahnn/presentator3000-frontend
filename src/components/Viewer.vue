@@ -1,9 +1,11 @@
 <template>
-  <div class="reveal">
-    <div class="slides">
-      <section v-for="slide in slides" v-html="slide.content"></section>
+    <div id="viewer" style="position: absoltue; top: 0; width: 100%; height: 100%;">
+        <div class="reveal">
+            <div class="slides">
+                <section v-for="slide in slides" v-html="slide.content"></section>
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -42,8 +44,11 @@
       };
     },
     mounted() {
+      console.log(document.getElementsByTagName('section'));
       Reveal.initialize({
         history: true,
+        width: '100%',
+        height: '100%',
         dependencies: [
           // Cross-browser shim that fully implements classList - https://github.com/eligrey/classList.js/
           // { src: '/node_modules/reveal.js/lib/js/classList.js', condition: function () { return !document.body.classList; } },
@@ -68,11 +73,9 @@
         ],
       });
     },
-    methods: {
-      components: Reveal,
-    },
   };
 </script>
 
 <style src="reveal.js/css/reveal.css"></style>
+<style src="reveal.js/css/theme/blood.css"></style>
 <style src="reveal.js/lib/css/zenburn.css"></style>

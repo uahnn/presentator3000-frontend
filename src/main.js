@@ -63,7 +63,7 @@ const router = new VueRouter({
     { path: '/features', name: 'features', component: Features },
     { path: '/presentations', name: 'presentations', component: Presentations },
     { path: '/presentation/edit/:title/:pid', name: 'presentation', component: Presentation },
-    { path: '/presentation/view/:title/:pid', name: 'presentation', component: Viewer },
+    { path: '/presentation/view/:title/:pid', name: 'viewer', component: Viewer },
     { path: '/login', component: Login },
     { path: '/logout',
       beforeEnter(to, from, next) {
