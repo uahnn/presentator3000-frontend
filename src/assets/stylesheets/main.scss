@@ -63,6 +63,7 @@ nav li { display: inline-block; }
       height: 100px;
       border: 1px solid #ccc;
       margin-right: 10px;
+      cursor: pointer;
       &.active {
         border: 2px solid #ff5555;
       }

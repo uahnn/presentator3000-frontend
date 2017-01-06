@@ -6,7 +6,7 @@
         {{ msg }}
         <div class="actionbar">
           <div class="l-3">
-            <a class="c-button c-button--small c-button--success" href="/presentation/add">
+            <a class="c-button c-button--small c-button--success" :href="'/presentation/edit/new%20presentation/0'">
               <icon name="plus-circle"></icon> New presentation
             </a>
             <a class="c-button c-button--small c-button--alert" href="">

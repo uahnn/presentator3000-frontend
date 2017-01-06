@@ -8,15 +8,16 @@
         </span></h1>
         <div class="actionbar">
           <div class="l-3">
-            <a class="c-button c-button--small c-button--neutral" v-on:click="newslide">
+            <a class="c-button c-button--small c-button--neutral" v-on:click.stop.prevent="newslide">
               <icon name="plus-circle"></icon> Add slide
             </a>
-            <ul class="list">
+            <ul class="list" v-sortable="{ onEnd: sortableOnEnd }">
               <li v-for="slide in slides">
-                <canvas class="preview" width="600" height="400" v-on:click="reload"></canvas>
+                <canvas class="preview" width="600" height="400" v-on:click.stop.prevent="reload"></canvas>
                 <div class="actions">
+                  <a><icon name="arrows"></icon></a>
                   <a><icon name="star"></icon></a>
-                  <a v-on:click="deleteslide"><icon name="trash"></icon></a>
+                  <a v-on:click.stop.prevent="deleteslide"><icon name="trash"></icon></a>
                 </div>
               </li>
             </ul>
@@ -40,9 +41,13 @@
 </template>
 
 <script>
+  import Vue from 'vue';
   import Icon from 'vue-awesome/components/Icon';
   import rasterizehtml from 'rasterizehtml';
+  import Sortable from 'vue-sortable';
   import Trumbowyg from './Trumbowyg';
+
+  Vue.use(Sortable);
 
   export default {
     data() {
@@ -79,6 +84,7 @@
         that.preview(slide.sid);
       });
 
+      // set initial active state
       $('canvas').eq(0).addClass('active');
     },
     methods: {
@@ -99,7 +105,6 @@
       preview(sid) {
         let canvas = document.getElementsByTagName('canvas')[this.getSlideIndex(sid)];
         let html = `<div class="reveal"><div class="slide"> ${this.getSlide(sid).content} </div></div>`;
-        console.log(html);
 
         rasterizehtml.drawHTML(html, canvas)
         .then(function success(renderResult) {
@@ -146,6 +151,10 @@
 
         // delete from list
         this.slides.splice(index, 1);
+      },
+      sortableOnEnd: function (e) {
+        console.log(this.slides, e);
+        // todo stuff... right now the data object isn't sorted
       },
     },
   };

@@ -36,7 +36,8 @@ module.exports = {
     'import/first': 'off',
     'max-len': 'off',
     'no-restricted-syntax': 'off',
-    'no-undef' : 'off',
+    'no-undef': 'off',
+    'import/no-webpack-loader-syntax': 'off',
   },
   'env': {
     'browser': true,
