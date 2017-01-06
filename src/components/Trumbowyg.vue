@@ -1,5 +1,5 @@
 <template>
-    <div id="trumbowyg-editor"></div>
+    <div id="trumbowyg-editor" class="reveal"></div>
 </template>
 
 <style lang="scss">

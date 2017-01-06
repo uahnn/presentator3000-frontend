@@ -8,14 +8,16 @@
         </span></h1>
         <div class="actionbar">
           <div class="l-3">
-            <a class="c-button c-button--small c-button--neutral" href="">
+            <a class="c-button c-button--small c-button--neutral" v-on:click="newslide">
               <icon name="plus-circle"></icon> Add slide
             </a>
             <ul class="list">
               <li v-for="slide in slides">
                 <canvas class="preview" width="600" height="400" v-on:click="reload"></canvas>
-                <icon name="star"></icon>
-                <icon name="trash"></icon>
+                <div class="actions">
+                  <a><icon name="star"></icon></a>
+                  <a v-on:click="deleteslide"><icon name="trash"></icon></a>
+                </div>
               </li>
             </ul>
           </div>
@@ -26,8 +28,10 @@
             <a class="c-button c-button--small c-button--neutral" href="">
             <icon name="gear"></icon> Preferences
             </a>
-
-            <trumbowyg :content="html" :language="en" @tbwchange="update"></trumbowyg>
+            <div class="title">
+              <label>Title</label><input type="text" v-model="presentation.title" />
+            </div>
+            <trumbowyg :content="slides[0].content" :language="en" @tbwchange="update"></trumbowyg>
           </div>
         </div>
       </div>
@@ -43,7 +47,6 @@
   export default {
     data() {
       return {
-        html: '<h1>Test</h1>',
         presentation: {
           pid: 1,
           title: 'Vue.js and Laravel',
@@ -75,6 +78,8 @@
       this.slides.forEach(function (slide) {
         that.preview(slide.sid);
       });
+
+      $('canvas').eq(0).addClass('active');
     },
     methods: {
       getSlide(sid) {
@@ -94,6 +99,8 @@
       preview(sid) {
         let canvas = document.getElementsByTagName('canvas')[this.getSlideIndex(sid)];
         let html = `<div class="reveal"><div class="slide"> ${this.getSlide(sid).content} </div></div>`;
+        console.log(html);
+
         rasterizehtml.drawHTML(html, canvas)
         .then(function success(renderResult) {
           console.log(renderResult);
@@ -120,6 +127,25 @@
         // set active state on thumb
         $('canvas').removeClass('active');
         $(e.target).addClass('active');
+      },
+      newslide() {
+        // todo how to get new sid?
+        let newsid = 4;
+
+        // push new slide
+        this.slides.push({ sid: newsid, content: '', preview: null });
+
+        // generate empty preview
+        this.preview(this.slides[newsid - 1].sid);
+
+        // empty text in editor
+        $('#trumbowyg-editor').trumbowyg('empty');
+      },
+      deleteslide(e) {
+        let index = $(e.target).parents('li').index();
+
+        // delete from list
+        this.slides.splice(index, 1);
       },
     },
   };
