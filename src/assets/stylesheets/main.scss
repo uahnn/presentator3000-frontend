@@ -49,16 +49,19 @@ nav, .subnav {
 
 nav li { display: inline-block; }
 
-#presentations {
+#presentations, #presentation {
   & .list li {
     display: flex;
     padding: 1rem 0 1rem 0;
     border-bottom: 2px solid #ccc;
-    & .preview {
-      width: 20%;
+    list-style-type: square;
+    & canvas {
       height: 100px;
       border: 1px solid #ccc;
       margin-right: 10px;
+      &.active {
+        border: 2px solid #ff5555;
+      }
     }
     & .info {
       & .title {

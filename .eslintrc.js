@@ -33,11 +33,13 @@ module.exports = {
     'object-shorthand' : 'off',
     'prefer-const' : 'off',
     'consistent-return' : 'off',
-    'import-first': 'off',
-    'import-extensions': 'off',
+    'import/first': 'off',
     'max-len': 'off',
+    'no-restricted-syntax': 'off',
+    'no-undef' : 'off',
   },
   'env': {
     'browser': true,
+    'jquery': true,
   },
 }

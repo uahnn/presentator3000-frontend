@@ -1,3 +1,4 @@
+import 'expose-loader?$!expose-loader?jQuery!jquery';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Icon from 'vue-awesome/components/Icon';

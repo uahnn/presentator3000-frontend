@@ -1,11 +1,11 @@
 <template>
-    <div id="viewer" style="position: absoltue; top: 0; width: 100%; height: 100%;">
-        <div class="reveal">
-            <div class="slides">
-                <section v-for="slide in slides" v-html="slide.content"></section>
-            </div>
-        </div>
+  <div id="viewer" style="position: absolute; top: 30px; width: 100%; height: 100%;">
+    <div class="reveal">
+      <div class="slides">
+        <section v-for="slide in slides" v-html="slide.content"></section>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -44,7 +44,6 @@
       };
     },
     mounted() {
-      console.log(document.getElementsByTagName('section'));
       Reveal.initialize({
         history: true,
         width: '100%',
@@ -76,6 +75,8 @@
   };
 </script>
 
-<style src="reveal.js/css/reveal.css"></style>
-<style src="reveal.js/css/theme/blood.css"></style>
-<style src="reveal.js/lib/css/zenburn.css"></style>
+
+<!-- todo make styles go away after component unloading -->
+<style src="src/assets/stylesheets/reveal/reveal.scss" lang="scss"></style>
+<style src="src/assets/stylesheets/reveal/blood.scss" lang="scss"></style>
+<style src="src/assets/stylesheets/reveal/zenburn.css"></style>
