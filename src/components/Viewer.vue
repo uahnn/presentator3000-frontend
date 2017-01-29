@@ -9,6 +9,7 @@
 </template>
 
 <script>
+  import Vue from 'vue';
   import Reveal from 'reveal.js';
 
   document.body.head = require('reveal.js/lib/js/head.min.js');
@@ -29,48 +30,66 @@
         },
         slides: [
           {
-            sid: 1,
-            content: '\n<h1>Test</h1># Title\n\n### Subtitle Longlonglonglongcat',
-          },
-          {
-            sid: 2,
-            content: '\n## Normal title\n\n- List item 1\n- List item 2\n- etc. etc. etc.',
-          },
-          {
-            sid: 3,
-            content: '',
+            sid: 0,
+            content: null,
           },
         ],
       };
     },
     mounted() {
-      Reveal.initialize({
-        history: true,
-        width: '100%',
-        height: '100%',
-        dependencies: [
-          // Cross-browser shim that fully implements classList - https://github.com/eligrey/classList.js/
-          // { src: '/node_modules/reveal.js/lib/js/classList.js', condition: function () { return !document.body.classList; } },
-          // { src: '/node_modules/reveal.js/lib/js/head.min.js', condition: function () { return !document.body.head; } },
+      this.fetchData();
+    },
+    methods: {
+      fetchData() {
+        this.error = null;
+        this.loading = true;
+        const url = 'http://presentator3000.uahnn.com/api/presentations/' + this.$route.params.pid + '/slides';
+        this.$http.get(url)
+        .then(response => response.json(), (response) => {
+          this.error = response.status + response.statusText;
+        }).then((json) => {
+          this.loading = false;
+          this.slides = json;
+          let i = 0;
+          // add sids manually as not yet provided by external data
+          for (let p in this.slides) {
+            if (!this.slides[p].hasOwnProperty('sid')) {
+              this.slides[p].sid = ++i;
+            }
+          }
 
-          // Interpret Markdown in <section> elements
-          // { src: '/node_modules/reveal.js/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
-          // { src: '/node_modules/reveal.js/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+          // wait for dom update to happen before trying to render previews
+          Vue.nextTick(function () {
+            Reveal.initialize({
+              history: true,
+              width: '100%',
+              height: '100%',
+              dependencies: [
+                // Cross-browser shim that fully implements classList - https://github.com/eligrey/classList.js/
+                // { src: '/node_modules/reveal.js/lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                // { src: '/node_modules/reveal.js/lib/js/head.min.js', condition: function () { return !document.body.head; } },
 
-          // Syntax highlight for <code> elements
-          /* eslint-disable no-undef */
-          // { src: './~/reveal.js/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
+                // Interpret Markdown in <section> elements
+                // { src: '/node_modules/reveal.js/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+                // { src: '/node_modules/reveal.js/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
 
-          // Zoom in and out with Alt+click
-          // { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true },
+                // Syntax highlight for <code> elements
+                /* eslint-disable no-undef */
+                // { src: './~/reveal.js/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
 
-          // Speaker notes
-          // { src: './~/reveal.js/plugin/notes/notes.js', async: true },
+                // Zoom in and out with Alt+click
+                // { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true },
 
-          // MathJax
-          // { src: 'reveal.js/plugin/math/math.js', async: true },
-        ],
-      });
+                // Speaker notes
+                // { src: './~/reveal.js/plugin/notes/notes.js', async: true },
+
+                // MathJax
+                // { src: 'reveal.js/plugin/math/math.js', async: true },
+              ],
+            });
+          });
+        });
+      },
     },
   };
 </script>

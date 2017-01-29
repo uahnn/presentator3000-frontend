@@ -1,6 +1,7 @@
 import 'expose-loader?$!expose-loader?jQuery!jquery';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import VueResource from 'vue-resource';
 import Icon from 'vue-awesome/components/Icon';
 import 'vue-awesome/icons';
 import App from './App';
@@ -16,6 +17,7 @@ import Presentations from './components/Presentations';
 import Presentation from './components/Presentation';
 
 Vue.use(VueRouter);
+Vue.use(VueResource);
 Vue.component('icon', Icon);
 
 Vue.prototype.filters = {

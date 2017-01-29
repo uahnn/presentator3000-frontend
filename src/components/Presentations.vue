@@ -112,17 +112,24 @@
     },
     methods: {
       fetchData() {
-        this.error = this.post = null;
+        this.error = null;
         this.loading = true;
-        // replace getPost with your data fetching util / API wrapper
-        /* getPost(this.$route.params.id, (err, post) => {
+        this.$http.get('http://presentator3000.uahnn.com/api/presentations')
+        .then(response => response.json(), (response) => {
+          console.log(response);
+          this.error = response.status + response.statusText;
+        }).then((json) => {
           this.loading = false;
-          if (err) {
-            this.error = err.toString();
-          } else {
-            this.post = post;
+          this.presentations = json.data;
+          let i = 0;
+
+          // add pids manually as not yet provided by external data
+          for (let p in this.presentations) {
+            if (!this.presentations[p].hasOwnProperty('pid')) {
+              this.presentations[p].pid = ++i;
+            }
           }
-        });*/
+        });
       },
     },
     components: { Icon },

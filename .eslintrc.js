@@ -38,6 +38,9 @@ module.exports = {
     'no-restricted-syntax': 'off',
     'no-undef': 'off',
     'import/no-webpack-loader-syntax': 'off',
+    'no-prototype-builtins': 'off',
+    'prefer-template' : 'off',
+    'guard-for-in' : 'off',
   },
   'env': {
     'browser': true,

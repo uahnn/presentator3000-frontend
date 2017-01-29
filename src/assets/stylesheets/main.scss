@@ -1,5 +1,9 @@
 @import "styles.scss";
 
+body {
+  overflow: scroll !important;
+}
+
 #dashboard {
   @media (--breakpoint-20) {
     display: flex;

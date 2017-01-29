@@ -61,17 +61,7 @@
         slides: [
           {
             sid: 1,
-            content: '<h1>Title</h1>\n<h2>Subtitle</h2>Longlonglonglongcat',
-            preview: null,
-          },
-          {
-            sid: 2,
-            content: '<h2>Normal title</h2>\n<ul><li>- List item 1</li>\n<li>- List item 2</li>\n<li>- etc. etc. etc.</li></ul>',
-            preview: null,
-          },
-          {
-            sid: 3,
-            content: '',
+            content: null,
             preview: null,
           },
         ],
@@ -79,13 +69,13 @@
     },
     components: { Icon, Trumbowyg },
     mounted() {
-      let that = this;
-      this.slides.forEach(function (slide) {
-        that.preview(slide.sid);
-      });
-
-      // set initial active state
-      $('canvas').eq(0).addClass('active');
+      // fetch the data when the view is created and the data is
+      // already being observed
+      this.fetchData();
+    },
+    watch: {
+      // call again the method if the route changes
+      $route: 'fetchData',
     },
     methods: {
       getSlide(sid) {
@@ -103,12 +93,12 @@
         return false;
       },
       preview(sid) {
-        let canvas = document.getElementsByTagName('canvas')[this.getSlideIndex(sid)];
-        let html = `<div class="reveal"><div class="slide"> ${this.getSlide(sid).content} </div></div>`;
+        let canvas = $('canvas').eq(this.getSlideIndex(sid));
+        let html = `<div class="reveal"><div class="slide">${this.getSlide(sid).content}</div></div>`;
 
-        rasterizehtml.drawHTML(html, canvas)
-        .then(function success(renderResult) {
-          console.log(renderResult);
+        rasterizehtml.drawHTML(html, canvas[0])
+        .then(function success() {
+          // console.log(renderResult);
         }, function error(e) {
           console.log(e);
         });
@@ -155,6 +145,39 @@
       sortableOnEnd: function (e) {
         console.log(this.slides, e);
         // todo stuff... right now the data object isn't sorted
+      },
+      fetchData() {
+        let that = this;
+        this.error = null;
+        this.loading = true;
+        const url = 'http://presentator3000.uahnn.com/api/presentations/' + this.$route.params.pid + '/slides';
+        this.$http.get(url)
+        .then(response => response.json(), (response) => {
+          this.error = response.status + response.statusText;
+        }).then((json) => {
+          this.loading = false;
+          this.slides = json;
+          let i = 0;
+          // add sids manually as not yet provided by external data
+          for (let p in this.slides) {
+            if (!this.slides[p].hasOwnProperty('sid')) {
+              this.slides[p].sid = ++i;
+            }
+            if (!this.slides[p].hasOwnProperty('preview')) {
+              this.slides[p].preview = null;
+            }
+          }
+
+          // wait for dom update to happen before trying to render previews
+          Vue.nextTick(function () {
+            for (let p in that.slides) {
+              that.preview(that.slides[p].sid);
+            }
+          });
+
+          // set initial active state
+          $('canvas').eq(0).trigger('click');
+        });
       },
     },
   };
