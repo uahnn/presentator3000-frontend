@@ -41,6 +41,7 @@ module.exports = {
     'no-prototype-builtins': 'off',
     'prefer-template' : 'off',
     'guard-for-in' : 'off',
+    'no-alert' : 'off',
   },
   'env': {
     'browser': true,

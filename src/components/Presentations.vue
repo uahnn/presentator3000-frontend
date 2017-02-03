@@ -6,11 +6,8 @@
         {{ msg }}
         <div class="actionbar">
           <div class="l-3">
-            <a class="c-button c-button--small c-button--success" :href="'/presentation/edit/new%20presentation/0'">
-              <icon name="plus-circle"></icon> New presentation
-            </a>
-            <a class="c-button c-button--small c-button--alert" href="">
-              <icon name="trash"></icon> Delete
+            <a class="c-button c-button--small c-button--success" @click="newPresentation">
+              <icon name="plus-circle"></icon> Add
             </a>
           </div>
           <div class="l-9">
@@ -44,6 +41,9 @@
                 </a>
                 <a class="c-button c-button--small c-button--neutral" href="">
                   <icon name="share-alt"></icon> Share
+                </a>
+                <a class="c-button c-button--small c-button--neutral" href="">
+                  <icon name="trash"></icon> Delete
                 </a>
               </div>
             </div>
@@ -129,6 +129,15 @@
               this.presentations[p].pid = ++i;
             }
           }
+        });
+      },
+      newPresentation() {
+        this.$http.post('http://presentator3000.uahnn.com/api/presentations',
+        { title: 'Titel', description: 'Beschreibung' })
+        .then(response => response.json(), (response) => {
+          console.log(response.body.error);
+        }).then((json) => {
+          console.log(json);
         });
       },
     },

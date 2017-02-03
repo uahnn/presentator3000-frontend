@@ -15,18 +15,17 @@
               <li v-for="slide in slides">
                 <canvas class="preview" width="600" height="400" v-on:click.stop.prevent="reload"></canvas>
                 <div class="actions">
-                  <a><icon name="arrows"></icon></a>
-                  <a><icon name="star"></icon></a>
-                  <a v-on:click.stop.prevent="deleteslide"><icon name="trash"></icon></a>
+                  <a title="reorder slide"><icon name="arrows"></icon></a>
+                  <a v-on:click.stop.prevent="deleteslide" title="delete slide"><icon name="trash"></icon></a>
                 </div>
               </li>
             </ul>
           </div>
           <div class="l-9">
-            <a class="c-button c-button--small c-button--neutral" href="">
+            <a class="c-button c-button--small c-button--disabled">
               <icon name="plus-circle"></icon> Add Code Fragment
             </a>
-            <a class="c-button c-button--small c-button--neutral" href="">
+            <a class="c-button c-button--small c-button--disabled">
             <icon name="gear"></icon> Preferences
             </a>
             <div class="title">
@@ -52,6 +51,7 @@
   export default {
     data() {
       return {
+        en: 'en',
         presentation: {
           pid: 1,
           title: 'Vue.js and Laravel',
@@ -60,7 +60,7 @@
         },
         slides: [
           {
-            sid: 1,
+            id: 1,
             content: null,
             preview: null,
           },
@@ -78,23 +78,23 @@
       $route: 'fetchData',
     },
     methods: {
-      getSlide(sid) {
+      getSlide(id) {
         for (let slide in this.slides) {
-          if (this.slides[slide].sid === sid) {
+          if (this.slides[slide].id === id) {
             return this.slides[slide];
           }
         }
         return false;
       },
-      getSlideIndex(sid) {
+      getSlideIndex(id) {
         for (let slide in this.slides) {
-          if (this.slides[slide].sid === sid) return slide;
+          if (this.slides[slide].id === id) return slide;
         }
         return false;
       },
-      preview(sid) {
-        let canvas = $('canvas').eq(this.getSlideIndex(sid));
-        let html = `<div class="reveal"><div class="slide">${this.getSlide(sid).content}</div></div>`;
+      preview(id) {
+        let canvas = $('canvas').eq(this.getSlideIndex(id)).empty();
+        let html = `<style>* { background-color: rgb(34, 34, 34); color: #fff; font-family: Ubuntu, sans-serif; font-size: 32pt; } h1 { font-size: 72pt; text-transform: uppercase;}</style><div class="reveal"><div class="slide">${this.getSlide(id).content}</div></div>`;
 
         rasterizehtml.drawHTML(html, canvas[0])
         .then(function success() {
@@ -110,7 +110,7 @@
         this.slides[index].content = content;
 
         // update thumb
-        this.preview(this.slides[index].sid);
+        this.preview(this.slides[index].id);
       },
       reload(e) {
         let index = $(e.target).parent().index();
@@ -122,47 +122,80 @@
         // set active state on thumb
         $('canvas').removeClass('active');
         $(e.target).addClass('active');
+
+        // push presentation to server
+        let slides = this.slides;
+        slides.forEach(function (c, i) {
+          delete slides[i].preview;
+        });
+        const url = 'http://presentator3000.uahnn.com/api/presentations/' + this.$route.params.pid + '/slides';
+        this.$http.post(url, slides).then(response => response.json(), (response) => {
+          console.log('error while saving', response);
+        }).then((json) => {
+          console.log('SAVED!', json);
+        });
       },
       newslide() {
-        // todo how to get new sid?
-        let newsid = 4;
+        // request new slide
+        const url = 'http://presentator3000.uahnn.com/api/presentations/' + this.$route.params.pid + '/slides';
+        this.$http.post(url, { content: 'Content', shared: false }).then(response => response.json(), (response) => {
+          console.log('error', response);
+        }).then((json) => {
+          let that = this;
+          let newslide = json;
+          newslide.preview = null;
 
-        // push new slide
-        this.slides.push({ sid: newsid, content: '', preview: null });
+          // push new slide
+          this.slides.push(newslide);
 
-        // generate empty preview
-        this.preview(this.slides[newsid - 1].sid);
+          // wait for dom update to happen before trying to render previews
+          Vue.nextTick(function () {
+            // generate empty preview
+            that.preview(newslide.id);
 
-        // empty text in editor
-        $('#trumbowyg-editor').trumbowyg('empty');
+            // make active
+            $('canvas').last().trigger('click');
+          });
+
+          // empty text in editor
+          $('#trumbowyg-editor').trumbowyg('html', newslide.content);
+        });
       },
       deleteslide(e) {
+        if (!confirm('Are you sure?')) return;
         let index = $(e.target).parents('li').index();
+        let id = this.slides[index].id;
+        console.log(id);
+        // delete in db
+        let url = 'http://presentator3000.uahnn.com/api/slides/' + id;
+        this.$http.delete(url)
+        .then((response) => {
+          console.log(response);
 
-        // delete from list
-        this.slides.splice(index, 1);
+          // delete from list
+          this.slides.splice(index, 1);
+        });
       },
       sortableOnEnd: function (e) {
         console.log(this.slides, e);
         // todo stuff... right now the data object isn't sorted
       },
       fetchData() {
+        // query all slides
         let that = this;
         this.error = null;
         this.loading = true;
-        const url = 'http://presentator3000.uahnn.com/api/presentations/' + this.$route.params.pid + '/slides';
+        let url = 'http://presentator3000.uahnn.com/api/presentations/' + this.$route.params.pid + '/slides';
         this.$http.get(url)
         .then(response => response.json(), (response) => {
           this.error = response.status + response.statusText;
         }).then((json) => {
           this.loading = false;
-          this.slides = json;
-          let i = 0;
-          // add sids manually as not yet provided by external data
+          if (json.length !== 0) {
+            this.slides = json;
+          }
+          // add preview manually as not yet provided by external data
           for (let p in this.slides) {
-            if (!this.slides[p].hasOwnProperty('sid')) {
-              this.slides[p].sid = ++i;
-            }
             if (!this.slides[p].hasOwnProperty('preview')) {
               this.slides[p].preview = null;
             }
@@ -171,12 +204,22 @@
           // wait for dom update to happen before trying to render previews
           Vue.nextTick(function () {
             for (let p in that.slides) {
-              that.preview(that.slides[p].sid);
+              that.preview(that.slides[p].id);
             }
           });
 
           // set initial active state
           $('canvas').eq(0).trigger('click');
+        });
+
+        // query presentation
+        url = 'http://presentator3000.uahnn.com/api/presentations/' + this.$route.params.pid;
+        this.$http.get(url)
+        .then(response => response.json(), (response) => {
+          this.error = response.status + response.statusText;
+        }).then((json) => {
+          // set presentation
+          this.presentation = json;
         });
       },
     },

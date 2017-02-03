@@ -74,10 +74,12 @@ nav li { display: inline-block; }
     }
     & .actions {
       position: absolute;
-      top: 25px;
-      right: -7px;
+      bottom: 18px;
+      right: 11px;
+      background-color: rgba(0,0,0,.8);
       & a {
         padding: 3px;
+        color: #ddd;
       }
     }
     & .info {
