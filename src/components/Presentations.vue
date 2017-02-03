@@ -25,24 +25,22 @@
             <div class="info">
               <div class="title">{{ presentation.title }}</div>
               <div class="meta">
-                Slides: {{ presentation.number_of_slides }} |
-                Theme: XXXXX |
-                Created: {{ presentation.date_created }}
+                Updated: {{ presentation.updated_at }}
               </div>
               <div class="action">
-                <a class="c-button c-button--small c-button--neutral" :href="'/presentation/edit/' + filters.slugify(presentation.title) + '/' + presentation.pid">
+                <a class="c-button c-button--small c-button--neutral" :href="'/presentation/edit/' + filters.slugify(presentation.title) + '/' + presentation.id">
                   <icon name="pencil"></icon> Edit
                 </a>
-                <a class="c-button c-button--small c-button--neutral" :href="'/presentation/view/' + filters.slugify(presentation.title) + '/' + presentation.pid">
+                <a class="c-button c-button--small c-button--neutral" :href="'/presentation/view/' + filters.slugify(presentation.title) + '/' + presentation.id">
                   <icon name="eye"></icon> Present
                 </a>
-                <a class="c-button c-button--small c-button--neutral" href="">
+                <a class="c-button c-button--small c-button--disabled" href="">
                   <icon name="print"></icon> Print Handout
                 </a>
-                <a class="c-button c-button--small c-button--neutral" href="">
+                <a class="c-button c-button--small c-button--disabled" href="">
                   <icon name="share-alt"></icon> Share
                 </a>
-                <a class="c-button c-button--small c-button--neutral" href="">
+                <a class="c-button c-button--small c-button--neutral" v-on:click="deletePresentation">
                   <icon name="trash"></icon> Delete
                 </a>
               </div>
@@ -65,19 +63,19 @@
         searchterm: '',
         presentations: [
           {
-            pid: 1,
+            id: 1,
             title: 'Vue.js and Laravel',
             number_of_slides: 30,
             date_created: '01.10.2016',
           },
           {
-            pid: 2,
+            id: 2,
             title: 'Angular 2 framework',
             number_of_slides: 30,
             date_created: '01.10.2016',
           },
           {
-            pid: 3,
+            id: 3,
             title: 'Vue.js framework',
             number_of_slides: 30,
             date_created: '01.10.2016',
@@ -123,21 +121,38 @@
           this.presentations = json.data;
           let i = 0;
 
-          // add pids manually as not yet provided by external data
+          // add ids manually as not yet provided by external data
           for (let p in this.presentations) {
-            if (!this.presentations[p].hasOwnProperty('pid')) {
-              this.presentations[p].pid = ++i;
+            if (!this.presentations[p].hasOwnProperty('id')) {
+              this.presentations[p].id = ++i;
             }
           }
         });
       },
       newPresentation() {
         this.$http.post('http://presentator3000.uahnn.com/api/presentations',
-        { title: 'Titel', description: 'Beschreibung' })
+        { title: 'Title', description: 'Description' })
         .then(response => response.json(), (response) => {
           console.log(response.body.error);
         }).then((json) => {
-          console.log(json);
+          this.presentations.push(json.data);
+
+          $('html, body').animate({ scrollTop: $(document).height() }, 'slow');
+        });
+      },
+      deletePresentation(e) {
+        if (!confirm('Are you sure?')) return;
+        let index = $(e.target).parents('li').index();
+        let id = this.presentations[index].id;
+        console.log(id);
+        // delete in db
+        let url = 'http://presentator3000.uahnn.com/api/presentations/' + id;
+        this.$http.delete(url)
+        .then((response) => {
+          console.log(response);
+
+          // delete from list
+          this.presentations.splice(index, 1);
         });
       },
     },

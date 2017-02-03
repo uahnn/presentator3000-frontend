@@ -32,6 +32,9 @@
               <label>Title</label><input type="text" v-model="presentation.title" />
             </div>
             <trumbowyg :content="slides[0].content" :language="en" @tbwchange="update"></trumbowyg>
+            <div class="lastsave">
+              Saved!
+            </div>
           </div>
         </div>
       </div>
@@ -96,12 +99,7 @@
         let canvas = $('canvas').eq(this.getSlideIndex(id)).empty();
         let html = `<style>* { background-color: rgb(34, 34, 34); color: #fff; font-family: Ubuntu, sans-serif; font-size: 32pt; } h1 { font-size: 72pt; text-transform: uppercase;}</style><div class="reveal"><div class="slide">${this.getSlide(id).content}</div></div>`;
 
-        rasterizehtml.drawHTML(html, canvas[0])
-        .then(function success() {
-          // console.log(renderResult);
-        }, function error(e) {
-          console.log(e);
-        });
+        rasterizehtml.drawHTML(html, canvas[0]);
       },
       update(content) {
         let index = $('canvas.active').parent().index();
@@ -119,20 +117,24 @@
         // replace text in editor
         $('#trumbowyg-editor').trumbowyg('html', newcontent);
 
+        // get index of last changed slide
+        let changedSlide = $('canvas.active').parent().index();
+
         // set active state on thumb
         $('canvas').removeClass('active');
         $(e.target).addClass('active');
 
-        // push presentation to server
-        let slides = this.slides;
-        slides.forEach(function (c, i) {
-          delete slides[i].preview;
-        });
+        // push changed slide to server
+        if (changedSlide < 0) return;
+        let actualChangedSlide = this.slides[changedSlide];
+        console.log(changedSlide);
+        let data = { id: actualChangedSlide.id, content: actualChangedSlide.content, shared: false };
         const url = 'http://presentator3000.uahnn.com/api/presentations/' + this.$route.params.pid + '/slides';
-        this.$http.post(url, slides).then(response => response.json(), (response) => {
-          console.log('error while saving', response);
-        }).then((json) => {
-          console.log('SAVED!', json);
+        this.$http.post(url, data).then(response => response.json(), (response) => {
+          let error = response.body.error;
+          if (error.status_code === 201) { // success
+            $('.lastsave').show().fadeOut(4000);
+          }
         });
       },
       newslide() {
@@ -176,9 +178,8 @@
           this.slides.splice(index, 1);
         });
       },
-      sortableOnEnd: function (e) {
-        console.log(this.slides, e);
-        // todo stuff... right now the data object isn't sorted
+      sortableOnEnd: function () {
+        // todo store on backend
       },
       fetchData() {
         // query all slides
@@ -193,6 +194,7 @@
           this.loading = false;
           if (json.length !== 0) {
             this.slides = json;
+            console.log(this.slides);
           }
           // add preview manually as not yet provided by external data
           for (let p in this.slides) {
