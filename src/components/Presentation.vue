@@ -127,14 +127,10 @@
         // push changed slide to server
         if (changedSlide < 0) return;
         let actualChangedSlide = this.slides[changedSlide];
-        console.log(changedSlide);
         let data = { id: actualChangedSlide.id, content: actualChangedSlide.content, shared: false };
-        const url = 'http://presentator3000.uahnn.com/api/presentations/' + this.$route.params.pid + '/slides';
-        this.$http.post(url, data).then(response => response.json(), (response) => {
-          let error = response.body.error;
-          if (error.status_code === 201) { // success
-            $('.lastsave').show().fadeOut(4000);
-          }
+        const url = 'http://presentator3000.uahnn.com/api/slides/' + actualChangedSlide.id;
+        this.$http.put(url, data).then(() => {
+          $('.lastsave').show().fadeOut(4000);
         });
       },
       newslide() {
@@ -194,7 +190,6 @@
           this.loading = false;
           if (json.length !== 0) {
             this.slides = json;
-            console.log(this.slides);
           }
           // add preview manually as not yet provided by external data
           for (let p in this.slides) {
